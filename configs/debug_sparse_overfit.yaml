@@ -19,5 +19,5 @@ sparse_module:
   width: 4096
   top_k: 16
 paths:
-  cache_dir: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/cache
-  checkpoint_dir: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints
+  cache_dir: ../artifacts/cache
+  checkpoint_dir: ../artifacts/checkpoints

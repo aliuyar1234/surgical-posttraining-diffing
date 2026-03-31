@@ -2,7 +2,7 @@ stage_name: build_mask_size_sensitivity
 seed: 20260326
 source_masks:
   - name: capability_mask
-    source_mask_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/masks/capability_mask_select_feature_masks-93a7f9305327.json
+    source_mask_path: ../artifacts/masks/capability_mask_select_feature_masks-93a7f9305327.json
     sizes:
       - 1
       - 2
@@ -10,7 +10,7 @@ source_masks:
       - 4
       - 5
   - name: verbosity_mask
-    source_mask_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/masks/verbosity_mask_select_feature_masks-93a7f9305327.json
+    source_mask_path: ../artifacts/masks/verbosity_mask_select_feature_masks-93a7f9305327.json
     sizes:
       - 1
       - 2

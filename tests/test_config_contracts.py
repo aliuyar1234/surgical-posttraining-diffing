@@ -61,3 +61,31 @@ def test_smoke_run_writes_snapshot_and_runtime_report() -> None:
     assert output["run_id"].startswith("m0-smoke-")
     assert snapshot_path.exists()
     assert runtime_path.exists()
+
+
+def test_config_loader_preserves_hf_model_ids_and_resolves_path_lists(tmp_path: Path) -> None:
+    config_path = tmp_path / "example.yaml"
+    config_path.write_text(
+        "\n".join(
+            [
+                "tokenizer_path: google/gemma-3-4b-it",
+                "model_pair:",
+                "  pt_path: google/gemma-3-4b-pt",
+                "  it_path: google/gemma-3-4b-it",
+                "checkpoint_paths:",
+                "  - ../artifacts/checkpoints/layer_16/example.pt",
+                "runtime_inputs:",
+                "  - ../results/runtime/example.json",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    loaded = load_yaml_config(config_path)
+
+    assert loaded["tokenizer_path"] == "google/gemma-3-4b-it"
+    assert loaded["model_pair"]["pt_path"] == "google/gemma-3-4b-pt"
+    assert loaded["model_pair"]["it_path"] == "google/gemma-3-4b-it"
+    assert loaded["checkpoint_paths"] == [str((tmp_path / "../artifacts/checkpoints/layer_16/example.pt").resolve()).replace("\\", "/")]
+    assert loaded["runtime_inputs"] == [str((tmp_path / "../results/runtime/example.json").resolve()).replace("\\", "/")]

@@ -4,7 +4,7 @@ data_config_path: ../configs/data.yaml
 model_config_path: ../configs/model_pair.yaml
 completion_run_id: generate_it_completions-02b5a243b908
 checkpoint_paths:
-  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/layer_28/sparse_delta_one_layer_train_sparse_delta-ecf55555b6c9.pt
+  - ../artifacts/checkpoints/layer_28/sparse_delta_one_layer_train_sparse_delta-ecf55555b6c9.pt
 gate_search:
   split: select_tune
   slices:

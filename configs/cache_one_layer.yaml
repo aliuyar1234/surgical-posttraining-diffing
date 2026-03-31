@@ -1,6 +1,6 @@
 stage_name: cache_paired_activations
-data_config_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/configs/data.yaml
-model_config_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/configs/model_pair.yaml
+data_config_path: ../configs/data.yaml
+model_config_path: ../configs/model_pair.yaml
 completion_run_id: generate_it_completions-02b5a243b908
 selected_layer:
   mode: late_only
@@ -13,5 +13,5 @@ runtime:
   device: cuda
   dtype: bfloat16
 paths:
-  completion_dir: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/completions
-  cache_dir: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/cache
+  completion_dir: ../artifacts/completions
+  cache_dir: ../artifacts/cache

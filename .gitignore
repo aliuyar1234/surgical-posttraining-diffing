@@ -34,6 +34,7 @@ Thumbs.db
 /paper/*
 !/paper/main.tex
 !/paper/references.bib
+!/paper/surgical-posttraining-diffing-ali-uyar.pdf
 !/paper/scripts/
 /paper/scripts/*
 !/paper/scripts/build_assets.py

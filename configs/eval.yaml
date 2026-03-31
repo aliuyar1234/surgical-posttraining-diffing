@@ -12,9 +12,9 @@ eval_slices:
   - Harmful
   - BenignAdjacent
 checkpoint_paths:
-  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/layer_16/sparse_delta_one_layer_train_sparse_delta-26c40b7d523c.pt
-  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/layer_28/sparse_delta_one_layer_train_sparse_delta-ecf55555b6c9.pt
-gates_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/gates/gates_calibrate_gates-0c18ea57f326.json
+  - ../artifacts/checkpoints/layer_16/sparse_delta_one_layer_train_sparse_delta-26c40b7d523c.pt
+  - ../artifacts/checkpoints/layer_28/sparse_delta_one_layer_train_sparse_delta-ecf55555b6c9.pt
+gates_path: ../artifacts/checkpoints/gates/gates_calibrate_gates-0c18ea57f326.json
 variants:
   - name: PT
     kind: pt
@@ -24,29 +24,29 @@ variants:
     kind: full_delta
   - name: PT_plus_CapMask
     kind: sparse_mask
-    mask_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/masks/capability_mask_select_feature_masks-93a7f9305327.json
+    mask_path: ../artifacts/masks/capability_mask_select_feature_masks-93a7f9305327.json
   - name: PT_plus_FullDelta_minus_VerbosityMask
     kind: full_delta_minus_mask
-    mask_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/masks/verbosity_mask_select_feature_masks-93a7f9305327.json
+    mask_path: ../artifacts/masks/verbosity_mask_select_feature_masks-93a7f9305327.json
   - name: PT_plus_RandomMask
     kind: sparse_mask
-    mask_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/masks/random_mask_capability_select_feature_masks-93a7f9305327.json
+    mask_path: ../artifacts/masks/random_mask_capability_select_feature_masks-93a7f9305327.json
   - name: PT_plus_ActivationMassMask
     kind: sparse_mask
-    mask_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/masks/activation_mass_mask_capability_select_feature_masks-93a7f9305327.json
+    mask_path: ../artifacts/masks/activation_mass_mask_capability_select_feature_masks-93a7f9305327.json
   - name: PT_plus_FullDelta_minus_RandomMask_optional
     kind: full_delta_minus_mask
-    mask_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/masks/random_mask_verbosity_select_feature_masks-93a7f9305327.json
+    mask_path: ../artifacts/masks/random_mask_verbosity_select_feature_masks-93a7f9305327.json
   - name: PT_plus_FullDelta_minus_ActivationMassMask_optional
     kind: full_delta_minus_mask
-    mask_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/masks/activation_mass_mask_verbosity_select_feature_masks-93a7f9305327.json
+    mask_path: ../artifacts/masks/activation_mass_mask_verbosity_select_feature_masks-93a7f9305327.json
   - name: PT_plus_MeanDiff
     kind: mean_diff
-    cache_summary_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/cache/cache_summary_cache_paired_activations-b5473e2eae87.json
-    gates_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/gates/gates_calibrate_gates-2175e8964bb9.json
+    cache_summary_path: ../artifacts/cache/cache_summary_cache_paired_activations-b5473e2eae87.json
+    gates_path: ../artifacts/checkpoints/gates/gates_calibrate_gates-2175e8964bb9.json
   - name: PT_plus_VerbosityMask_optional
     kind: sparse_mask
-    mask_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/masks/verbosity_mask_select_feature_masks-93a7f9305327.json
+    mask_path: ../artifacts/masks/verbosity_mask_select_feature_masks-93a7f9305327.json
 metrics:
   capability:
     - QA_EM

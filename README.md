@@ -1,5 +1,9 @@
 # Surgical Post-Training Diffing
 
+[![Paper PDF](https://img.shields.io/badge/PDF-Download%20Paper-B30B00?style=flat-square&logo=adobeacrobatreader&logoColor=white)](https://raw.githubusercontent.com/aliuyar1234/surgical-posttraining-diffing/main/paper/surgical-posttraining-diffing-ali-uyar.pdf)
+[![Manuscript Source](https://img.shields.io/badge/LaTeX-Manuscript-008080?style=flat-square&logo=latex&logoColor=white)](./paper/main.tex)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat-square&logo=python&logoColor=white)](./pyproject.toml)
+
 Code for sparse PT-to-IT diffing, intervention masks, and evaluation of instruction-tuning behavior.
 
 This public repo is intentionally slim. It keeps the implementation, configs, tests, and manuscript source, while leaving out internal planning docs, generated artifacts, datasets, cached activations, checkpoints, and compiled paper outputs.
@@ -20,7 +24,7 @@ This public repo is intentionally slim. It keeps the implementation, configs, te
 - `data/`
 - `artifacts/`
 - `results/`
-- compiled LaTeX outputs and generated paper assets
+- generated paper assets beyond the final PDF
 - local caches and temporary files
 
 ## What this repo studies
@@ -39,7 +43,7 @@ The codebase includes:
 
 1. Create a Python 3.11 environment.
 2. Install the project and test dependencies.
-3. Update model and artifact paths in the configs for your environment.
+3. Use Hugging Face model IDs directly or switch to explicit local paths with `./` or `../` prefixes.
 4. Run the test suite with `pytest -q`.
 
 Representative entrypoints:
@@ -53,7 +57,7 @@ Representative entrypoints:
 
 ## Notes on configs
 
-Some configs in this repo are archived experiment configs and still contain environment-specific model paths or references to locally generated artifacts. Treat them as source material, not as guaranteed plug-and-play defaults. Before running end-to-end experiments, replace those paths with values that match your machine and regenerate any ignored artifacts locally.
+Some configs in this repo are archived experiment configs and still reference run-specific artifacts that are intentionally ignored from version control. The loader accepts Hugging Face model IDs as-is, and it resolves explicit relative filesystem paths for local assets. Before running end-to-end experiments, regenerate the ignored artifacts locally or update those config entries to match your environment.
 
 ## Manuscript source
 

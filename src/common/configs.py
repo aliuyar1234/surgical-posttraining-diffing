@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -157,6 +158,8 @@ def _resolve_paths(value: Any, *, base_dir: Path, parent_key: str | None = None)
     if isinstance(value, list):
         return [_resolve_paths(item, base_dir=base_dir, parent_key=parent_key) for item in value]
     if isinstance(value, str) and _looks_like_path_key(parent_key):
+        if _should_preserve_model_identifier(value=value, parent_key=parent_key):
+            return value
         maybe_path = Path(value)
         if maybe_path.is_absolute():
             return maybe_path.as_posix()
@@ -168,7 +171,27 @@ def _looks_like_path_key(parent_key: str | None) -> bool:
     if parent_key is None:
         return False
     normalized = parent_key.lower()
-    return normalized == "path" or normalized.endswith("_path") or normalized.endswith("_dir")
+    return (
+        normalized == "path"
+        or normalized == "runtime_inputs"
+        or normalized.endswith("_path")
+        or normalized.endswith("_paths")
+        or normalized.endswith("_dir")
+    )
+
+
+def _should_preserve_model_identifier(*, value: str, parent_key: str | None) -> bool:
+    if parent_key not in {"pt_path", "it_path", "tokenizer_path"}:
+        return False
+    normalized = value.strip()
+    if not normalized:
+        return False
+    drive, _ = os.path.splitdrive(normalized)
+    if drive:
+        return False
+    if normalized.startswith(("/", "\\", "./", "../", "~")):
+        return False
+    return "/" in normalized and "\\" not in normalized
 
 
 def _canonicalize(value: Any) -> Any:

@@ -14,9 +14,9 @@ eval_slices:
   - Harmful
   - BenignAdjacent
 checkpoint_paths:
-  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/layer_16/sparse_delta_one_layer_train_sparse_delta-26c40b7d523c.pt
-  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/layer_28/sparse_delta_one_layer_train_sparse_delta-ecf55555b6c9.pt
-gates_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/gates/gates_calibrate_gates-0c18ea57f326.json
+  - ../artifacts/checkpoints/layer_16/sparse_delta_one_layer_train_sparse_delta-26c40b7d523c.pt
+  - ../artifacts/checkpoints/layer_28/sparse_delta_one_layer_train_sparse_delta-ecf55555b6c9.pt
+gates_path: ../artifacts/checkpoints/gates/gates_calibrate_gates-0c18ea57f326.json
 candidate_pool_size: 128
 feature_summary_columns:
   - max_answer

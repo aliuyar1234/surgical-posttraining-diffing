@@ -2,7 +2,7 @@ stage_name: build_prompt_suite
 seed: 20260326
 prompt_template: "Instruction:\n{prompt}\n\nResponse:\n"
 prompt_template_hash: e062d19358cd8326
-tokenizer_path: E:/Model/google--gemma-3-4b-it
+tokenizer_path: google/gemma-3-4b-it
 max_prompt_tokens: 192
 splits:
   train_unlabeled: 1800
