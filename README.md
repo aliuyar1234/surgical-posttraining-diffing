@@ -2,6 +2,7 @@
 
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/aliuyar1234/surgical-posttraining-diffing)
 [![Paper PDF](https://img.shields.io/badge/PDF-Download%20Paper-B30B00?style=flat-square&logo=adobeacrobatreader&logoColor=white)](https://raw.githubusercontent.com/aliuyar1234/surgical-posttraining-diffing/main/paper/surgical-posttraining-diffing-ali-uyar.pdf)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.19347477-0A7BBB?style=flat-square&logo=doi&logoColor=white)](https://doi.org/10.5281/zenodo.19347477)
 [![Manuscript Source](https://img.shields.io/badge/LaTeX-Manuscript-008080?style=flat-square&logo=latex&logoColor=white)](./paper/main.tex)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat-square&logo=python&logoColor=white)](./pyproject.toml)
 
