@@ -1,0 +1,9 @@
+[project]
+name = "surgical-posttraining-diffing"
+version = "0.1.0"
+description = "Sparse PT-to-IT diffing and intervention experiments for instruction-tuning analysis"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

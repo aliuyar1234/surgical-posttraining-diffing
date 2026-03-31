@@ -1,0 +1,226 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{threeparttable}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage[numbers]{natbib}
+\usepackage{placeins}
+
+\definecolor{accent}{HTML}{1F4E79}
+\definecolor{accentlight}{HTML}{EAF3FB}
+\definecolor{failurelight}{HTML}{FDEFE7}
+\definecolor{textgray}{HTML}{444444}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  citecolor=accent,
+  urlcolor=accent
+}
+
+\captionsetup{
+  font=small,
+  labelfont=bf
+}
+
+\setlist[itemize]{leftmargin=1.35em, topsep=0.3em, itemsep=0.2em}
+\setlist[enumerate]{leftmargin=1.5em, topsep=0.3em, itemsep=0.2em}
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+\raggedbottom
+\widowpenalty=10000
+\clubpenalty=10000
+
+\graphicspath{{figures/}}
+
+\input{generated/metrics_macros.tex}
+
+\title{\vspace{-1.2em}\bfseries Surgical Post-Training Diffing:\\[0.3em]
+\Large Partial Recovery Without Clean Small-Mask Separation}
+\author{Ali Uyar}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Instruction-tuned models differ from their pretrained siblings in ways that are behaviorally useful but internally hard to localize. We study this gap with a paired answer-phase sparse surrogate built from two residual-stream layers under a shared neutral template. On Gemma 3 4B PT/IT, the learned surrogate lowers answer-token KL to the instruction-tuned model by \KLReductionPct\%, raises a held-out capability composite from 0 to \FullDeltaCap\ (\FullDeltaCapRecovery\ recovery of the PT-to-IT gap), and sharply reduces the pretrained model's long repeated continuations. However, the more ambitious separation story fails on held-out data. A frozen 5-feature capability mask recovers no capability at all, matching trivial baselines, and subtracting a learned verbosity mask preserves recovered capability but lengthens outputs from \FullDeltaLen\ to \VSubLen\ tokens on average even as the carryover-based verbosity score falls from \FullDeltaVerbCarry\ to \VSubVerbCarry. A late-only one-layer ablation nearly matches the two-layer surrogate, and a threshold sweep shows the null capability-mask result is robust to nearby selector cutoffs. The resulting picture is more precise than a simple positive or negative headline: a small answer-phase surrogate can capture a real part of instruction-tuning behavior, but tiny frozen masks do not cleanly split capability from verbosity in this compact setting.
+\end{abstract}
+
+\section{Introduction}
+
+Instruction tuning changes a language model's behavior in ways that are empirically obvious and mechanistically opaque. Compared with a pretrained sibling, an instruction-tuned model is often shorter, more format-compliant, and more useful on downstream tasks, but the internal changes responsible for those gains are hard to isolate \citep{wei2022finetuned,ouyang2022training}. If those changes were recoverable in a compact surrogate, they would offer a tractable object for causal intervention rather than a diffuse before/after difference.
+
+This paper studies that problem through \emph{surgical post-training diffing}: we pair a pretrained model with its instruction-tuned sibling, cache answer-phase activation deltas at a small number of residual-stream layers, learn sparse modules that predict those deltas from pretrained hidden states, and then intervene on subsets of the resulting sparse features. Unlike one-shot model editing methods that directly rewrite isolated associations \citep{meng2022locating}, our target is the structured internal difference between PT and IT siblings. The central question is not only whether a sparse surrogate can partially recover instruction-tuned behavior, but whether small frozen masks can selectively preserve capability while discarding assistant-like verbosity.
+
+The saved evidence supports a bounded but nontrivial result. A two-layer answer-phase surrogate (\emph{FullDelta}) substantially improves over the pretrained model on held-out capability and teacher-forced fidelity metrics. Yet the more optimistic intervention story does not survive. A 5-feature capability mask is a direct held-out null result, matched by trivial baselines. Subtracting a learned verbosity mask leaves recovered capability intact and slightly lowers the carryover-based verbosity score, but it makes raw outputs \emph{longer}, not shorter. A one-layer late-only surrogate nearly matches the two-layer model, and a threshold sweep makes the null capability-mask result look robust rather than fragile.
+
+That combination of outcomes is the paper's contribution. The learned surrogate is real; the clean small-mask separation is not. In a field where negative or mixed intervention results are often relegated to cleanup material, that boundary matters.
+
+\paragraph{Contributions.}
+\begin{itemize}
+    \item We construct a paired sparse answer-phase surrogate for the PT-to-IT shift on Gemma 3 4B and show that it produces a real held-out intervention rather than a cosmetic replay of the pretrained model.
+    \item We show that tiny frozen masks do \emph{not} cleanly separate capability from verbosity on held-out data: the frozen capability mask fails outright, and verbosity subtraction is mixed rather than clean.
+    \item We support that conclusion with matched baselines, a one-layer ablation, a threshold-sensitivity sweep, and prompt-level paired bootstrap intervals \citep{efron1994introduction}.
+\end{itemize}
+
+\section{Setup and method}
+
+\subsection{Model pair, prompt suite, and split discipline}
+
+We study Gemma 3 4B pretrained (PT) and instruction-tuned (IT) siblings under a shared neutral template:
+\[
+\texttt{Instruction:\textbackslash n\{prompt\}\textbackslash n\textbackslash nResponse:\textbackslash n}.
+\]
+The evaluation suite contains six slices: QA, Math, Format, Brevity, Harmful, and BenignAdjacent. Capability is measured on QA, Math, and Format; verbosity is measured from generated length and brevity-violation excess; refusal is secondary throughout. The held-out test split contains \NumTestPrompts\ prompts total, with 100 prompts per slice.
+
+All main experiments use deterministic IT completions as the teacher-forced target. We render the full prompt-plus-completion sequence with the neutral template, locate the first answer token after the \texttt{Response:} prefix, and cache only answer-phase activations and answer-phase PT-to-IT deltas. This scope cut is deliberate: the paper studies completion-phase post-training changes rather than every internal effect of instruction tuning.
+
+\subsection{Sparse answer-phase surrogate}
+
+For each selected residual-stream layer $l$, we cache pretrained hidden states $h^{(l,t)}_{\mathrm{PT}}$ and paired deltas
+\[
+\Delta^{(l,t)} = h^{(l,t)}_{\mathrm{IT}} - h^{(l,t)}_{\mathrm{PT}}
+\]
+for answer-token positions $t$. We then train one sparse module per layer:
+\begin{align}
+u &= \mathrm{ReLU}(W_{\mathrm{enc}} x + b_{\mathrm{enc}}), \\
+z &= \mathrm{TopK}(u, k), \\
+\hat{\Delta} &= D z + b_{\mathrm{dec}},
+\end{align}
+where $x$ is the standardized pretrained hidden state. The full surrogate intervenes by adding the decoded sparse delta back into the pretrained forward pass:
+\[
+h'^{(l,t)} = h^{(l,t)}_{\mathrm{PT}} + \alpha_l \hat{\Delta}^{(l,t)},
+\]
+with one calibrated scalar gate $\alpha_l$ per layer. In the final configuration, we use two residual-stream layers: a mid layer and a late layer.
+
+\subsection{Feature scoring and frozen masks}
+
+After fitting the full surrogate, we summarize sparse features on the selector splits and score them against operational endpoints rather than semantic labels. Capability scores aggregate standardized coefficients from QA, Math, and Format endpoints. Verbosity scores come from brevity-excess prediction. Refusal scores are treated as exploratory.
+
+We then forward-select tiny masks under locked size caps. The capability mask optimizes held-out capability while penalizing verbosity carryover. The verbosity mask is used only as a subtraction mask from FullDelta: it is selected to reduce FullDelta's verbosity while penalizing capability loss. Selection never touches the test split. The sparse basis itself is inspired by feature decompositions from mechanistic interpretability \citep{elhage2022toy,bricken2023monosemanticity}, but here the features are trained explicitly to predict paired PT-to-IT activation deltas.
+
+\section{Evaluation design}
+
+The main evaluated variants are PT, IT under the neutral template, PT + FullDelta, PT + CapMask, PT + FullDelta - VerbosityMask, and matched trivial baselines. The baselines are a mean-delta intervention, a random mask matched in size, and an activation-mass mask matched in size.
+
+We report:
+\begin{itemize}
+    \item answer-token KL to IT under teacher forcing,
+    \item a capability composite $\mathrm{Cap} = (\mathrm{QA\_EM} + \mathrm{Math\_EM} + \mathrm{Format\_Pass})/3$,
+    \item capability recovery relative to PT and IT,
+    \item mean output length and brevity excess,
+    \item verbosity carryover, which measures how much of the PT-to-IT verbosity shift a variant imports.
+\end{itemize}
+
+Uncertainty is estimated with a prompt-level paired bootstrap using 10{,}000 resamples and 95\% confidence intervals.
+
+\section{Main results}
+
+\subsection{FullDelta is real, but it is not full recovery}
+
+\input{generated/main_results_table.tex}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{main_results.pdf}
+    \caption{Held-out intervention behavior on the main variants. FullDelta is the only clearly nontrivial frozen intervention. CapMask and MeanDiff remain near PT on both capability and teacher-forced fidelity.}
+    \label{fig:main-results}
+\end{figure}
+
+Table~\ref{tab:main-results} and Figure~\ref{fig:main-results} establish the paper's strongest positive result. FullDelta reduces answer-token KL from \PTKL\ to \FullDeltaKL, a \KLReductionPct\% reduction relative to PT, and raises the capability composite from 0 to \FullDeltaCap. In free generation, the pretrained model is dominated by long repeated continuations; the full surrogate is much shorter and much closer to IT on both length and brevity excess. This is not a cosmetic gain.
+
+At the same time, the surrogate is only a partial recovery. Capability reaches \FullDeltaCapRecovery\ recovery of the PT-to-IT gap, not a majority of it. The late-layer teacher-forced reconstruction remains negative in $R^2$, so the paper cannot honestly claim that both selected layers are reconstructing the IT delta cleanly. The right conclusion is that the surrogate is real and useful, but incomplete.
+
+\subsection{Tiny frozen masks do not cleanly separate capability from verbosity}
+
+\input{generated/key_comparisons_table.tex}
+
+The clean separation story fails on the held-out test split. CapMask produces zero capability gain, zero capability recovery, and PT-like verbosity metrics. It does not merely underperform; it lands directly on the null. RandomMask and ActivationMassMask are similarly null, which means the held-out conclusion is not ``CapMask loses to a baseline'' so much as ``none of the tiny frozen capability masks work at all on test.''
+
+Verbosity subtraction is more subtle. PT + FullDelta - VerbosityMask preserves FullDelta's recovered capability exactly in the aggregate and lowers the carryover-based verbosity metric from \FullDeltaVerbCarry\ to \VSubVerbCarry. However, it lengthens outputs from \FullDeltaLen\ to \VSubLen\ tokens on average and raises brevity excess from 1.42 to 3.26. The subtraction mask therefore changes something real, but not in the clean ``shorter while preserving capability'' direction we originally hoped for.
+
+\begin{tcolorbox}[colback=accentlight, colframe=accent!45!black, boxrule=0.5pt, arc=2pt, title=\textbf{Two representative qualitative cases}]
+\textbf{Case 1: FullDelta fixes a format-constrained arithmetic prompt while CapMask stays PT-like.}
+
+\smallskip
+\textbf{Prompt.} Compute 45 - 4. Give only the final number.
+
+\textbf{Gold.} 41
+
+\textbf{PT.} \texttt{45 - 4 = 41 ... [then continues by repeating the prompt]}
+
+\textbf{FullDelta.} \texttt{41}
+
+\textbf{CapMask.} \texttt{45 - 4 = 41 ... [PT-like continuation]}
+
+\medskip
+\textbf{Case 2: verbosity subtraction can reintroduce long continuations.}
+
+\smallskip
+\textbf{Prompt.} In at most 2 words, give the opposite of soft. Give only the opposite.
+
+\textbf{Gold.} Hard
+
+\textbf{FullDelta.} \texttt{Hard}
+
+\textbf{FullDelta - VMask.} \texttt{Hard ... [then resumes a long repeated instruction-style continuation]}
+\end{tcolorbox}
+
+These examples mirror the aggregate results: the full surrogate can impose the desired short-format answer, but the tiny frozen masks do not cleanly preserve that behavior.
+
+\FloatBarrier
+
+\section{Baselines, ablations, and robustness}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{robustness_results.pdf}
+    \caption{Ablation and selector-side robustness. The late-only one-layer surrogate nearly matches the two-layer model, and the capability-mask threshold sweep reproduces the locked mask for three nearby cutoff choices.}
+    \label{fig:robustness}
+\end{figure}
+
+The baselines sharpen the interpretation. MeanDiff remains near PT on both capability and KL, and its capability deficit relative to FullDelta is large and precise (\Cref{tab:key-comparisons}). This matters because it shows that the paper is not merely rediscovering an average PT-to-IT delta vector. The learned surrogate is doing something genuinely different.
+
+The one-layer late-only ablation nearly matches the two-layer surrogate: one layer reaches \OneLayerKL\ KL and \OneLayerCap\ capability, versus \TwoLayerKL\ and \TwoLayerCap\ for the two-layer model. The second layer still points in the right direction, but only modestly. The manuscript should therefore avoid claiming that exactly two layers are a decisive ingredient.
+
+Finally, the threshold sweep argues against dismissing the null capability-mask result as selector fragility. Three nearby cutoff choices reproduce the locked 5-feature capability mask with the same predicted objective, while a stricter exclusion rule changes the mask but makes the selector objective worse. This does not create new test performance, but it makes the held-out null more credible.
+
+\section{Discussion}
+
+The paper supports a clearer claim than the original optimistic plan. A sparse answer-phase surrogate can recover a real part of instruction-tuning behavior, but the resulting sparse features are not automatically behaviorally separable into tiny frozen masks. That is an important distinction. The surrogate is useful precisely because it gives us a controlled object on which failure becomes measurable.
+
+Two aspects of the results are especially informative. First, both selected masks collapse onto the late layer, and the same late layer has negative reconstruction $R^2$. This suggests that the selector is leaning on a brittle or overloaded region of the surrogate rather than a cleanly factorized feature basis. Second, the capability composite is driven entirely by Math and Format because QA exact match remains zero even for IT under the neutral template. The paper should therefore present capability as ``short-format execution'' more than ``open-domain QA competence'' in this setup.
+
+The limitations are real. We study one PT/IT pair, one neutral prompt condition, and only answer-phase interventions. Refusal remains weak and should stay secondary. None of those caveats invalidate the main result, but together they make the correct final framing a bounded mechanistic study rather than a general disentanglement claim.
+
+\section{Conclusion}
+
+The strongest defensible conclusion is simple: sparse answer-phase post-training diffing yields a real held-out surrogate for part of the PT-to-IT shift, but tiny frozen masks do not cleanly separate capability from verbosity in this compact setting. The positive result is the surrogate itself. The negative result is that small-mask behavioral surgery is harder than the optimistic story implied. Both are central findings.
+
+\appendix
+
+\section{Reproducibility note}
+
+The repository includes resolved configs, frozen run identifiers, artifact manifests, prompt-level outputs, and stage-level runtime logs. The manuscript above intentionally keeps compute accounting out of the main narrative, but the supporting material needed to reproduce the saved results remains on disk in the released artifacts.
+
+\bibliographystyle{abbrvnat}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,23 @@
+stage_name: generate_it_completions
+seed: 20260326
+model_pair:
+  family: gemma-3
+  size: 4b
+  pt_path: E:/Model/google--gemma-3-4b-pt
+  it_path: E:/Model/google--gemma-3-4b-it
+  tokenizer_policy: local_paths_with_runtime_compat_assert
+prompt_template_hash: e062d19358cd8326
+generation:
+  do_sample: false
+  device: cuda
+  dtype: bfloat16
+  batch_size: 4
+  determinism_smoke_size: 12
+  max_prompt_tokens: 192
+  max_new_tokens:
+    default: 48
+    harmful: 64
+    benign_adjacent: 64
+paths:
+  split_manifest_dir: ../data/splits
+  completion_dir: ../artifacts/completions

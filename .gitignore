@@ -1,0 +1,39 @@
+# Private planning and internal workflow
+/AGENTS.md
+/docs/
+
+# Python caches and virtualenvs
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest-tmp/
+.pytest_tmp/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+
+# Local scratch and temporary files
+/.tmp/
+/.tmp_pytest/
+/.tmp_pytest_basetemp/
+/.tmp_pytest_local/
+/pytest-cache-files-*/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Generated research inputs and outputs
+/data/
+/artifacts/
+/results/
+
+# Manuscript: keep source only
+/paper/*
+!/paper/main.tex
+!/paper/references.bib
+!/paper/scripts/
+/paper/scripts/*
+!/paper/scripts/build_assets.py

@@ -1,0 +1,77 @@
+stage_name: select_feature_masks
+seed: 20260326
+data_config_path: ../configs/data.yaml
+model_config_path: ../configs/model_pair.yaml
+completion_run_id: generate_it_completions-02b5a243b908
+feature_splits:
+  - select_train
+  - select_tune
+eval_slices:
+  - QA
+  - Math
+  - Format
+  - Brevity
+  - Harmful
+  - BenignAdjacent
+checkpoint_paths:
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/layer_16/sparse_delta_one_layer_train_sparse_delta-26c40b7d523c.pt
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/layer_28/sparse_delta_one_layer_train_sparse_delta-ecf55555b6c9.pt
+gates_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/gates/gates_calibrate_gates-0c18ea57f326.json
+candidate_pool_size: 128
+feature_summary_columns:
+  - max_answer
+  - mean_answer
+  - last_answer
+  - mean_contribution_norm
+mask_caps:
+  capability: 24
+  verbosity: 16
+  refusal: 12
+variants:
+  - PT
+  - IT_neutral
+  - PT_plus_FullDelta
+generation:
+  batch_size: 8
+selector_scores:
+  capability_from: positive_standardized_capability_coefficients
+  verbosity_from: standardized_brevity_excess_magnitude
+  refusal_from: harmful_minus_benign_refusal
+selector_model:
+  alpha_grid:
+    - 0.0001
+    - 0.0003
+    - 0.001
+    - 0.003
+    - 0.01
+    - 0.03
+    - 0.1
+  l1_ratio_grid:
+    - 0.2
+    - 0.5
+    - 0.8
+    - 1.0
+  cv_folds: 5
+  max_iter: 20000
+  tol: 0.0001
+  min_feature_scale: 1.0e-6
+  min_target_scale: 1.0e-6
+  refusal_signal_threshold: 0.01
+verbosity_subtraction:
+  semantics: subtract_from_fulldelta
+  candidate_source: high_vj_features
+  objective:
+    name: J_vsub
+    capability_penalty: 0.25
+    length_weight: 0.5
+    brevity_weight: 0.5
+forward_selection:
+  objective_source: selector_surrogate_on_select_tune
+  min_gain: 0.002
+random_baseline_seed: 20260326
+runtime:
+  device: cuda
+  dtype: bfloat16
+paths:
+  selector_dir: ../artifacts/selectors
+  mask_dir: ../artifacts/masks

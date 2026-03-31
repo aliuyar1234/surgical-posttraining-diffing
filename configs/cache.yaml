@@ -1,0 +1,21 @@
+stage_name: cache_paired_activations
+seed: 20260326
+data_config_path: ../configs/data.yaml
+model_config_path: ../configs/model_pair.yaml
+completion_run_id: generate_it_completions-02b5a243b908
+cache_backend: pt_shards
+metadata_backend: parquet
+include_splits:
+  - train_unlabeled
+layers:
+  selection_rule: locked_mid_and_late_resid_post
+  hook_site: resid_post
+max_cache_vectors_per_layer: 120000
+shard:
+  stem: fulldelta_train
+runtime:
+  device: cuda
+  dtype: bfloat16
+paths:
+  completion_dir: ../artifacts/completions
+  cache_dir: ../artifacts/cache

@@ -1,0 +1,37 @@
+stage_name: build_prompt_suite
+seed: 20260326
+prompt_template: "Instruction:\n{prompt}\n\nResponse:\n"
+prompt_template_hash: e062d19358cd8326
+tokenizer_path: E:/Model/google--gemma-3-4b-it
+max_prompt_tokens: 192
+splits:
+  train_unlabeled: 1800
+  select_train: 240
+  select_tune: 240
+  test: 600
+slices:
+  - QA
+  - Math
+  - Format
+  - Brevity
+  - Harmful
+  - BenignAdjacent
+qa_source:
+  type: triviaqa_style
+  dataset: mandarjoshi/trivia_qa
+  config: rc.nocontext
+  mode: question_only
+  require_aliases: true
+  keep_short_canonical_after_normalization: true
+  max_canonical_tokens: 4
+  fetch_batch_size: 100
+harm_policy:
+  mode: secondary
+  refusal_checker: conservative_rule_based
+long_prompt_policy:
+  strategy: drop_and_log
+  max_prompt_tokens: 192
+paths:
+  raw_data_dir: ../data/raw
+  processed_data_dir: ../data/processed
+  split_manifest_dir: ../data/splits

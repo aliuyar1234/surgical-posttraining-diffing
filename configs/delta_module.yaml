@@ -1,0 +1,30 @@
+stage_name: train_sparse_delta
+seed: 20260326
+layers:
+  - layer_index: 16
+    cache_run_id: cache_paired_activations-b5473e2eae87
+    shard_name: fulldelta_train_mid
+    train_split: train_unlabeled
+    holdout_prompt_count: 30
+  - layer_index: 28
+    cache_run_id: cache_paired_activations-b5473e2eae87
+    shard_name: fulldelta_train_late
+    train_split: train_unlabeled
+    holdout_prompt_count: 30
+training:
+  optimizer: adamw
+  lr: 0.0003
+  weight_decay: 0.01
+  batch_size: 256
+  max_epochs: 3
+  early_stopping_patience: 1
+  dtype: bf16_activations_fp32_master
+  eps_std: 1.0e-6
+  sanity_panel_size: 64
+  device: cuda
+sparse_module:
+  width: 4096
+  top_k: 16
+paths:
+  cache_dir: ../artifacts/cache
+  checkpoint_dir: ../artifacts/checkpoints

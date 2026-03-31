@@ -1,0 +1,25 @@
+stage_name: train_sparse_delta
+seed: 20260326
+source_cache:
+  cache_run_id: cache_paired_activations-1eb493e50385
+  layer_index: 28
+  shard_name: late_smoke
+  train_split: train_unlabeled
+  holdout_prompt_count: 2
+training:
+  optimizer: adamw
+  lr: 0.0003
+  weight_decay: 0.01
+  batch_size: 64
+  max_epochs: 3
+  early_stopping_patience: 1
+  dtype: bf16_activations_fp32_master
+  eps_std: 1.0e-6
+  sanity_panel_size: 32
+  device: cuda
+sparse_module:
+  width: 4096
+  top_k: 16
+paths:
+  cache_dir: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/cache
+  checkpoint_dir: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints

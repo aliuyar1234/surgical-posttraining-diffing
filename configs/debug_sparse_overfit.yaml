@@ -1,0 +1,23 @@
+stage_name: debug_sparse_overfit
+seed: 20260326
+probe:
+  cache_run_id: cache_paired_activations-1eb493e50385
+  layer_index: 28
+  shard_name: late_smoke
+  split: train_unlabeled
+  prompt_id: qa_train_unlabeled_0000
+  max_vectors: 32
+training:
+  lr: 0.0003
+  weight_decay: 0.01
+  batch_size: 16
+  max_steps: 400
+  log_every_steps: 25
+  eps_std: 1.0e-6
+  device: cuda
+sparse_module:
+  width: 4096
+  top_k: 16
+paths:
+  cache_dir: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/cache
+  checkpoint_dir: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints

@@ -1,0 +1,52 @@
+stage_name: build_threshold_sensitivity
+selectors_config_path: ../configs/selectors.yaml
+variants:
+  - name: capability_mask_core10pct
+    target: capability
+    thresholds:
+      core_fraction: 0.10
+      verbosity_exclusion_fraction: 0.50
+      refusal_exclusion_fraction: 0.50
+  - name: capability_mask_core20pct
+    target: capability
+    thresholds:
+      core_fraction: 0.20
+      verbosity_exclusion_fraction: 0.50
+      refusal_exclusion_fraction: 0.50
+  - name: capability_mask_excl40pct
+    target: capability
+    thresholds:
+      core_fraction: 0.15
+      verbosity_exclusion_fraction: 0.40
+      refusal_exclusion_fraction: 0.40
+  - name: capability_mask_excl60pct
+    target: capability
+    thresholds:
+      core_fraction: 0.15
+      verbosity_exclusion_fraction: 0.60
+      refusal_exclusion_fraction: 0.60
+  - name: verbosity_mask_core10pct
+    target: verbosity
+    thresholds:
+      core_fraction: 0.10
+      capability_exclusion_fraction: 0.50
+  - name: verbosity_mask_core20pct
+    target: verbosity
+    thresholds:
+      core_fraction: 0.20
+      capability_exclusion_fraction: 0.50
+  - name: verbosity_mask_excl40pct
+    target: verbosity
+    thresholds:
+      core_fraction: 0.15
+      capability_exclusion_fraction: 0.40
+  - name: verbosity_mask_excl60pct
+    target: verbosity
+    thresholds:
+      core_fraction: 0.15
+      capability_exclusion_fraction: 0.60
+paths:
+  mask_dir: ../artifacts/masks
+  summary_dir: ../results/metrics
+  runtime_dir: ../results/runtime
+  snapshot_dir: ../artifacts/config_snapshots

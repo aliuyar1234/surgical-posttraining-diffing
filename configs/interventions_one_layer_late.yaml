@@ -1,0 +1,33 @@
+stage_name: calibrate_gates
+seed: 20260326
+data_config_path: ../configs/data.yaml
+model_config_path: ../configs/model_pair.yaml
+completion_run_id: generate_it_completions-02b5a243b908
+checkpoint_paths:
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/layer_28/sparse_delta_one_layer_train_sparse_delta-ecf55555b6c9.pt
+gate_search:
+  split: select_tune
+  slices:
+    - QA
+    - Math
+    - Format
+    - Brevity
+    - Harmful
+    - BenignAdjacent
+  objective: answer_token_kl
+  grid:
+    - 0.5
+    - 1.0
+    - 1.5
+  boundary_expansion:
+    - 0.25
+    - 1.75
+variants:
+  full_delta: PT_plus_FullDelta
+  ablation_label: one_layer_late_only
+runtime:
+  device: cuda
+  dtype: bfloat16
+paths:
+  checkpoint_dir: ../artifacts/checkpoints
+  gate_dir: ../artifacts/checkpoints/gates

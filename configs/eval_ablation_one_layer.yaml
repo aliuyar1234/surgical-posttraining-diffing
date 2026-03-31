@@ -1,0 +1,54 @@
+stage_name: run_eval
+seed: 20260326
+ablation_label: one_layer_late_only
+data_config_path: ../configs/data.yaml
+model_config_path: ../configs/model_pair.yaml
+completion_run_id: generate_it_completions-02b5a243b908
+fidelity_split: test
+eval_slices:
+  - QA
+  - Math
+  - Format
+  - Brevity
+  - Harmful
+  - BenignAdjacent
+checkpoint_paths:
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/layer_28/sparse_delta_one_layer_train_sparse_delta-ecf55555b6c9.pt
+gates_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/gates/gates_calibrate_gates-7f85a8a0e65d.json
+variants:
+  - name: PT
+    kind: pt
+  - name: IT_neutral
+    kind: it
+  - name: PT_plus_FullDelta
+    kind: full_delta
+metrics:
+  capability:
+    - QA_EM
+    - Math_EM
+    - Format_Pass
+  fidelity:
+    - KL_ans_to_IT
+    - R2_late
+  verbosity:
+    - Len
+    - BrevEx
+    - VerbCarry
+    - VerbClose
+  runtime:
+    - wall_clock_seconds
+    - gpu_budget_fraction
+generation:
+  batch_size: 8
+bootstrap:
+  seed: 20260327
+  resamples: 10000
+runtime:
+  device: cuda
+  dtype: bfloat16
+paths:
+  metric_dir: ../results/metrics
+  table_dir: ../results/tables
+  figure_dir: ../results/figures
+  example_dir: ../results/examples
+  runtime_dir: ../results/runtime

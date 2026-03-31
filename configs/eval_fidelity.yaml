@@ -1,0 +1,32 @@
+stage_name: run_eval
+seed: 20260326
+data_config_path: ../configs/data.yaml
+model_config_path: ../configs/model_pair.yaml
+completion_run_id: generate_it_completions-02b5a243b908
+fidelity_split: test
+eval_slices:
+  - QA
+  - Math
+  - Format
+  - Brevity
+  - Harmful
+  - BenignAdjacent
+checkpoint_paths:
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/layer_16/sparse_delta_one_layer_train_sparse_delta-26c40b7d523c.pt
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/layer_28/sparse_delta_one_layer_train_sparse_delta-ecf55555b6c9.pt
+gates_path: E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/artifacts/checkpoints/gates/gates_calibrate_gates-0c18ea57f326.json
+variants:
+  - PT
+  - IT_neutral
+  - PT_plus_FullDelta
+generation:
+  batch_size: 8
+runtime:
+  device: cuda
+  dtype: bfloat16
+runtime_inputs:
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/results/runtime/runtime_report_generate_it_completions-02b5a243b908.json
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/results/runtime/runtime_report_cache_paired_activations-b5473e2eae87.json
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/results/runtime/runtime_report_train_sparse_delta-a6b75b7f50db.json
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/results/runtime/runtime_report_calibrate_gates-0c18ea57f326.json
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/results/runtime/runtime_report_run_eval-80f649b084bf.json

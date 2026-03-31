@@ -1,0 +1,8 @@
+stage_name: runtime_total
+runtime_inputs:
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/results/runtime/runtime_report_generate_it_completions-02b5a243b908.json
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/results/runtime/runtime_report_cache_paired_activations-b5473e2eae87.json
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/results/runtime/runtime_report_train_sparse_delta-a6b75b7f50db.json
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/results/runtime/runtime_report_calibrate_gates-0c18ea57f326.json
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/results/runtime/runtime_report_run_eval-80f649b084bf.json
+  - E:/Research/surgical-posttraining-diffing-build-pack-patched-v2-24h/surgical-posttraining-diffing-build-pack-patched-v2-24h/results/runtime/runtime_report_build_feature_table-73d4f6f156a2.json
