@@ -2,6 +2,19 @@
 /AGENTS.md
 /docs/
 
+# Internal scaffolding — not part of the public research release
+.codex/
+.tmp_gpt_pro_bundle/
+.tmp_zip_*/
+_local/
+CODEX_*.md
+*_CODEX.md
+START_PROMPT_FOR_CODEX.md
+PROMPT_TO_CODEX.md
+GPT_PRO_*.md
+*gpt_pro*
+state/
+
 # Python caches and virtualenvs
 __pycache__/
 *.py[cod]
