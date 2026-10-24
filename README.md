@@ -1,6 +1,6 @@
 # Surgical Post-Training Diffing: Partial Recovery Without Clean Small-Mask Separation
 
-[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.19347477-0A7BBB?style=flat-square&logo=doi&logoColor=white)](https://doi.org/10.5281/zenodo.19347477)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.19347476-0A7BBB?style=flat-square&logo=doi&logoColor=white)](https://doi.org/10.5281/zenodo.19347476)
 [![Paper PDF](https://img.shields.io/badge/Paper-PDF-B31B1B?style=flat-square&logo=adobeacrobatreader&logoColor=white)](paper/surgical-posttraining-diffing-ali-uyar.pdf)
 [![Manuscript Source](https://img.shields.io/badge/LaTeX-Source-1D4ED8?style=flat-square&logo=latex&logoColor=white)](paper/main.tex)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/aliuyar1234/surgical-posttraining-diffing)
@@ -91,7 +91,7 @@ The repository includes resolved configs, frozen run identifiers, artifact manif
   author = {Uyar, Ali},
   title  = {Surgical Post-Training Diffing: Partial Recovery Without Clean Small-Mask Separation},
   year   = {2026},
-  doi    = {10.5281/zenodo.19347477},
+  doi    = {10.5281/zenodo.19347476},
   note   = {Independent research}
 }
 ```
